@@ -305,7 +305,7 @@ LoadCalculationResource : [
 
 isActive: false,
 totalLoadWat: null,
-
+solarPanel: null,
 inventerType: null,
 
 form : {
@@ -326,7 +326,6 @@ form : {
 
   mounted() {
     this.getSelectedAppliances()
-    this.calculateInventer()
   },
 
 
@@ -384,21 +383,22 @@ form : {
       this.allSelectedAppliance = JSON.parse(window.localStorage.getItem("selectedAppliances")); //get them back
       let allWat = this.allSelectedAppliance == null ? null : this.allSelectedAppliance.map(obj => obj.count * obj.Wat);
       this.totalLoadWat = allWat == null ? null : allWat.reduce((a, b) => a + b, 0)
+      this.getLoadResult()
     },
 
-    calculateInventer()
+    getLoadResult()
     {
       let bigCities = [];
-for (let i = 0; i < this.LoadCalculationResource.length; i++) {
-    if (this.LoadCalculationResource[i].loadWat >= this.totalLoadWat) {
+      for (let i = 0; i < this.LoadCalculationResource.length; i++) 
+    {
+      if (this.LoadCalculationResource[i].loadWat >= this.totalLoadWat) {
         bigCities.push(this.LoadCalculationResource[i]);
-    }
-}
+      }
+     }
 
-console.log(bigCities[0])
+        this.inventerType = bigCities[0]
 
-this.inventerType = bigCities[0]
-
+        this.solarpPnel = this.inventerType.battery + this.inventerType.battery 
     }
 
   }
