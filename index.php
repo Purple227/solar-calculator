@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,7 +7,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/9319d37366.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue@3"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vuelidate@0.7.7/lib/index.min.js"></script>
   </head>
   <body>
   <section class="section" id="app">
@@ -41,14 +39,14 @@
 <div class="box">
 
 
-<div class="notification is-light" v-for="(selectedLoad, index) in allSelectedAppliance" :key="index" v-if="allSelectedAppliance != 0"> <!-- Notifacatin tag open -->
-						<button class="delete" @click="removeSelectedAppliances(index)"> </button>
+<div class="notification is-light m-2 p-2" v-for="(selectedLoad, index) in allSelectedAppliance" :key="index" v-if="allSelectedAppliance != 0"> <!-- Notifacatin tag open -->
+						<button class="delete" @click="removeSelectedAppliances(selectedLoad.id)"> </button>
 
 						<div class="columns"> <!-- Columns wrapper tag open -->
 
 							<div class="column"> <!-- First column tag open -->
 								<div class="content">
-									<strong> {{ selectedLoad.name}} </strong>
+									<strong> {{ selectedLoad.name }} </strong>
 								</div>
 							</div> <!-- First column tag close -->
 
@@ -57,15 +55,15 @@
 
 								<div class="content"> <!-- Content tag open -->
 
-									<div class="buttons has-addons ">
+									<div class="buttons has-addons " >
 
-										<span class="button"> <!--i class="fas fa-minus orange" @click="downCounterEditInCart(menu.id,menu.count * menu.price, menu.name, menu.count --)"> </i-->  </span>
-
-
-										<span class="button orange is-bold is-pulled-right"> {{ 1  }} </span>
+										<span class="button is-small"  @click="decrementApplianceCounter(selectedLoad.id, selectedLoad.name, selectedLoad.Wat, selectedLoad.count)"> <i class="fas fa-minus" > </i>  </span>
 
 
-										<span class="button"> <!--i class="fas fa-plus orange" @click="upCounterEditInCart(menu.id, menu.count * menu.price, menu.name, menu.count ++)"> </i--> </span>
+										<span class="button is-small orange is-bold is-pulled-right"> {{ selectedLoad.count  }} </span>
+
+
+										<span class="button is-small " @click="incrementApplianceCounter(selectedLoad.id, selectedLoad.name, selectedLoad.Wat, selectedLoad.count)"> <i class="fas fa-plus" > </i> </span>
 
 									</div>
 
@@ -135,7 +133,7 @@
 
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success" :disabled="form.name == null || form.email == null || form.phone == null">Get result</button>
+      <button class="button is-success" :disabled="form.name == null || form.email == null || form.phone == null" > Get result </button>
       <button class="button" @click="modalFlip()">Cancel</button>
     </footer>
   </div>
@@ -162,150 +160,153 @@
       return {
         
       Appliances: [
-{ name : 'light bulb (Incandescent)',  Wat :100},
-{ name : '22 Inch LED TV',  Wat : 50 },
-{ name : '25 colour TV', Wat :150 }, 
-{ name : '32 Inch LED TV',	Wat : 80 },
-{ name : '42 Inch LED TV', Wat : 110 },
-{ name : '46 Inch LED TV', Wat : 140 },
-{ name : '49 Inch LED TV', Wat : 160 },
-{ name : '55 Inch LED TV', Wat : 180 },
-{ name : '60W light bulb (Incandescent)', Wat	:	60 },
-{ name : '65 Inch LED TV', Wat : 210 },
-{ name : '82 Inch LED TV', Wat : 355 },
-{ name : 'Air Cooler',  Wat: 150 },
-{ name : 'Air Purifier', Wat : 30 },
-{ name : 'Amazon Echo', Wat : 20 },
-{ name : 'Amazon Echo Dot', Wat : 25 },
-{ name : 'Amazon Echo Show', Wat : 35 },
-{ name : 'Double Door Freezer, Refrigerator', Wat : 280 },
-{ name : 'Apple TV', Wat : 250 },
-{ name : 'Aquarium Pump', Wat : 250 },
-{ name : 'Ceiling Fan', Wat : 140 },
-{ name : 'Chromebook', Wat : 85 },
-{ name : 'Chromecast', Wat : 12 },
-{ name : 'Clock radio', Wat : 20 },
-{ name : 'Clothes Dryer', Wat  : 4000 },
-{ name : 'Coffee Maker', Wat  : 240 },
-{ name : 'Computer Monitor', Wat : 130 },
-{ name : 'Corded Drill', Wat :	850 },
-{ name : 'Corded Electric Handheld Blower', Wat	:	2500 },
-{ name : 'Curling Iron', Wat : 250 },
-{ name :'Big Deep Freezer', Wat : 900 },
-{ name : 'Medium Deep Freezer', Wat	: 650 },
-{ name : 'Small Deep Freezer', Wat : 400 },
-{ name : 'Dehumidifier', Wat : 240 },
-{ name : 'Desktop Computer', Wat : 650 },
-{ name : 'Dishwasher', Wat	:	1500 },
-{ name : 'Domestic Water Pump', Wat : 700 },
-{ name : 'DVD Player', Wat : 160 },
-{ name : 'Electric Blanket', Wat : 200 },
-{ name : 'Electric Doorbell Transformer', Wat : 20 },
-{ name : 'Electric Heater Fan', Wat  : 3000 },
-{ name :'Electric Kettle', Wat : 3000 },
-{ name : 'Electric Pressure Cooker', Wat : 1000 },
-{ name : 'Electric stove', Wat : 2000 },
-{ name : 'Electric Tankless Water Heater', Wat	:	1700 },
-{ name : 'Espresso Coffee Machine', Wat	:	500 },
-{ name : 'Evaporative Air Conditioner', Wat	:	3100 },
-{ name : 'External Hard Drive', Wat	:	10 },
-{ name : 'Extractor Fan', Wat	:	80 },
-{ name : 'Fluorescent Lamp', Wat	:	75 },
-{ name : 'Food Blender', Wat	:	1200 },
-{ name : 'Food Dehydrator', Wat	:	800 },
-{ name : 'Freezer', Wat	:	350 },
-{ name : 'Fridge', Wat	:	420 },
-{ name : 'Fridge / Freezer', Wat	:	700 },
-{ name : 'Fryer', Wat	:	1500 },
-{ name : 'Game Console', Wat	:	500 },
-{ name : 'Gaming PC', Wat	:	900 },
-{ name : 'Garage Door Opener', Wat	:	600 },
-{ name : 'Google Home Mini', Wat	:	50 },
-{ name : 'Guitar Amplifier', Wat : 60 },
-{ name : 'Hair Blow Dryer',	Wat :	2500 },
-{ name : 'Hand Wash Oversink Water Heater',	Wat :	3000 },
-{ name : 'Heated Bathroom Mirror', Wat	:	100 },
-{ name : 'Heated Hair Rollers', Wat	:	700 },
-{ name : 'Home Air Conditioner', Wat	:	4000 },
-{ name : 'Home Internet Router', Wat	:	25 },
-{ name : 'Home Phone', Wat	:	30 },
-{ name :  'Home Sound System', Wat	:	195 },
-{ name : 'Hot Water Dispenser', Wat	:	1800 },
-{ name : 'Hot Water Immersion Heater', Wat	:	5000 },
-{ name : 'Humidifier', Wat : 80 },
-{ name : 'iMac',	Wat :	400 },
-{ name : 'Inkjet Printer', Wat	:	200 },
-{ name : 'Inverter Air conditioner', Wat	:	1400 },
-{ name : 'Iron', Wat	:	1800 },
-{ name : 'Jacuzzi', Wat	:	7500 },
-{ name : 'Kitchen Extractor Fan',	Wat :	250 },
-{ name : 'Laptop Computer', Wat	:	140 },
-{ name : 'Laser Printer', Wat	:	800 },
-{ name : 'Lawnmower', Wat	:	1400 },
-{ name : 'LED Christmas Lights', Wat	:	30 },
-{ name : 'LED Light Bulb', Wat	:	30 },
-{ name : 'Mi Box', Wat	:	25 },
-{ name : 'Microwave', Wat	:	2500 },
-{ name : 'Night Light', Wat	:	20 },
-{ name : 'Nintendo Switch AC Adapter', Wat	:	90 },
-{ name : 'Outdoor Hot Tub',	Wat :	1000 },
-{ name : 'Oven',	Wat :	2500 },
-{ name : 'Paper Shredder', Wat	:	320 },
-{ name : 'Pedestal Fan', Wat 	:	60 },
-{ name : 'Philips Hue Smart Bulb', Wat	:	19 },
-{ name : 'Phone Charger', Wat	:	20 },
-{ name : 'Playstation 4',	Wat :	200 },
-{ name : 'Playstation 5', Wat	:	450 },
-{ name : 'Portable Air Conditioner', Wat	:	1200 },
-{ name : 'Pressure Cooker', Wat	:	700 },
-{ name : 'Projector', Wat	:	270 },
-{ name : 'Refrigerator', Wat	:	400 },
-{ name : 'Rice Cooker', Wat	:	1200 },
-{ name : 'Scanner', Wat :	180 },
-{ name : 'Sewing Machine', Wat	:	350 },
-{ name : 'Singer Sewing Machine', Wat : 450 },
-{ name : 'Slow Cooker', Wat	:	480 },
-{ name : 'Smoke Detector', Wat 	:	12 },
-{ name : 'Steam Iron', Wat	:	2500 },
-{ name : 'Steriliser', Wat	:	850 },
-{ name : 'Straightening Iron', Wat	:	400 },
-{ name : 'Table Fan', Wat	:	50 },
-{ name : 'Table Top Fridge', Wat	:	95 },
-{ name : 'Tablet Charger', Wat	:	45 },
-{ name : 'Toaster', Wat 	:	2500 },
-{ name : 'Treadmill', Wat	: 1200 },
-{ name : 'Tube Light (1500mm)', Wat	:	40 },
-{ name : 'TV (19" colour)', Wat	:	200 },
-{ name : 'Vacuum Cleaner', Wat	:	1200 },
-{ name : 'Wall Fan', Wat	:	90 },
-{ name : 'Washing Machine', Wat	:	500 },
-{ name : 'Water Feature', Wat	:	35 },
-{ name : 'Water Filter and Cooler', Wat : 200 },
-{ name : 'WiFi Booster', Wat	:	19 },
-{ name : 'WiFi Router',	 Wat :	25 },
-{ name : 'Window Air Conditioner', Wat	:	1900 },
-{ name : 'Xbox One',  Wat	: 210 }
+{id : 1, name : 'light bulb (Incandescent)',  Wat :100},
+{id : 2, name : '22 Inch LED TV',  Wat : 50 },
+{id : 3, name : '25 colour TV', Wat :150 }, 
+{id : 4, name : '32 Inch LED TV',	Wat : 80 },
+{id : 5, name : '42 Inch LED TV', Wat : 110 },
+{id : 6, name : '46 Inch LED TV', Wat : 140 },
+{id : 7, name : '49 Inch LED TV', Wat : 160 },
+{id : 8, name : '55 Inch LED TV', Wat : 180 },
+{id : 9, name : '60W light bulb (Incandescent)', Wat	:	60 },
+{id : 10, name : '65 Inch LED TV', Wat : 210 },
+{id : 11, name : '82 Inch LED TV', Wat : 355 },
+{id : 12, name : 'Air Cooler',  Wat: 150 },
+{id : 13, name : 'Air Purifier', Wat : 30 },
+{id : 14, name : 'Amazon Echo', Wat : 20 },
+{id : 15, name : 'Amazon Echo Dot', Wat : 25 },
+{id : 16, name : 'Amazon Echo Show', Wat : 35 },
+{id : 17, name : 'Double Door Freezer, Refrigerator', Wat : 280 },
+{id : 18, name : 'Apple TV', Wat : 250 },
+{id : 19, name : 'Aquarium Pump', Wat : 250 },
+{id : 20, name : 'Ceiling Fan', Wat : 140 },
+{id : 21, name : 'Chromebook', Wat : 85 },
+{id : 22, name : 'Chromecast', Wat : 12 },
+{id : 23, name : 'Clock radio', Wat : 20 },
+{id : 24, name : 'Clothes Dryer', Wat  : 4000 },
+{id : 25, name : 'Coffee Maker', Wat  : 240 },
+{id : 26, name : 'Computer Monitor', Wat : 130 },
+{id : 27, name : 'Corded Drill', Wat :	850 },
+{id : 28, name : 'Corded Electric Handheld Blower', Wat	:	2500 },
+{id : 29, name : 'Curling Iron', Wat : 250 },
+{id : 30, name :'Big Deep Freezer', Wat : 900 },
+{id : 31, name : 'Medium Deep Freezer', Wat	: 650 },
+{id : 32, name : 'Small Deep Freezer', Wat : 400 },
+{id : 33, name : 'Dehumidifier', Wat : 240 },
+{id : 34, name : 'Desktop Computer', Wat : 650 },
+{id : 35, name : 'Dishwasher', Wat	:	1500 },
+{id : 36, name : 'Domestic Water Pump', Wat : 700 },
+{id : 37, name : 'DVD Player', Wat : 160 },
+{id : 38, name : 'Electric Blanket', Wat : 200 },
+{id : 38, name : 'Electric Doorbell Transformer', Wat : 20 },
+{id : 39, name : 'Electric Heater Fan', Wat  : 3000 },
+{id : 40, name :'Electric Kettle', Wat : 3000 },
+{id : 41, name : 'Electric Pressure Cooker', Wat : 1000 },
+{id : 42, name : 'Electric stove', Wat : 2000 },
+{id : 43, name : 'Electric Tankless Water Heater', Wat	:	1700 },
+{id : 44, name : 'Espresso Coffee Machine', Wat	:	500 },
+{id : 45, name : 'Evaporative Air Conditioner', Wat	:	3100 },
+{id : 46, name : 'External Hard Drive', Wat	:	10 },
+{id : 47, name : 'Extractor Fan', Wat	:	80 },
+{id : 48, name : 'Fluorescent Lamp', Wat	:	75 },
+{id : 49, name : 'Food Blender', Wat	:	1200 },
+{id : 50, name : 'Food Dehydrator', Wat	:	800 },
+{id : 51, name : 'Freezer', Wat	:	350 },
+{id : 52, name : 'Fridge', Wat	:	420 },
+{id : 53, name : 'Fridge / Freezer', Wat	:	700 },
+{id : 54, name : 'Fryer', Wat	:	1500 },
+{id : 55, name : 'Game Console', Wat	:	500 },
+{id : 56, name : 'Gaming PC', Wat	:	900 },
+{id : 57, name : 'Garage Door Opener', Wat	:	600 },
+{id : 58, name : 'Google Home Mini', Wat	:	50 },
+{id : 59, name : 'Guitar Amplifier', Wat : 60 },
+{id : 60, name : 'Hair Blow Dryer',	Wat :	2500 },
+{id : 61, name : 'Hand Wash Oversink Water Heater',	Wat :	3000 },
+{id : 62, name : 'Heated Bathroom Mirror', Wat	:	100 },
+{id : 63, name : 'Heated Hair Rollers', Wat	:	700 },
+{id : 64, name : 'Home Air Conditioner', Wat	:	4000 },
+{id : 65, name : 'Home Internet Router', Wat	:	25 },
+{id : 66, name : 'Home Phone', Wat	:	30 },
+{id : 67, name :  'Home Sound System', Wat	:	195 },
+{id : 68, name : 'Hot Water Dispenser', Wat	:	1800 },
+{id : 69, name : 'Hot Water Immersion Heater', Wat	:	5000 },
+{id : 70, name : 'Humidifier', Wat : 80 },
+{id : 71, name : 'iMac',	Wat :	400 },
+{id : 72, name : 'Inkjet Printer', Wat	:	200 },
+{id : 73, name : 'Inverter Air conditioner', Wat	:	1400 },
+{id : 74, name : 'Iron', Wat	:	1800 },
+{id : 75, name : 'Jacuzzi', Wat	:	7500 },
+{id : 76, name : 'Kitchen Extractor Fan',	Wat :	250 },
+{id : 77, name : 'Laptop Computer', Wat	:	140 },
+{id : 78, name : 'Laser Printer', Wat	:	800 },
+{id : 79, name : 'Lawnmower', Wat	:	1400 },
+{id : 80, name : 'LED Christmas Lights', Wat	:	30 },
+{id : 81, name : 'LED Light Bulb', Wat	:	30 },
+{id : 82, name : 'Mi Box', Wat	:	25 },
+{id : 83, name : 'Microwave', Wat	:	2500 },
+{id : 84, name : 'Night Light', Wat	:	20 },
+{id : 85, name : 'Nintendo Switch AC Adapter', Wat	:	90 },
+{id : 86, name : 'Outdoor Hot Tub',	Wat :	1000 },
+{id : 87, name : 'Oven',	Wat :	2500 },
+{id : 88, name : 'Paper Shredder', Wat	:	320 },
+{id : 89, name : 'Pedestal Fan', Wat 	:	60 },
+{id : 90, name : 'Philips Hue Smart Bulb', Wat	:	19 },
+{id : 91, name : 'Phone Charger', Wat	:	20 },
+{id : 92, name : 'Playstation 4',	Wat :	200 },
+{id : 93, name : 'Playstation 5', Wat	:	450 },
+{id : 94, name : 'Portable Air Conditioner', Wat	:	1200 },
+{id : 95, name : 'Pressure Cooker', Wat	:	700 },
+{id : 96, name : 'Projector', Wat	:	270 },
+{id : 97, name : 'Refrigerator', Wat	:	400 },
+{id : 98, name : 'Rice Cooker', Wat	:	1200 },
+{id : 99, name : 'Scanner', Wat :	180 },
+{id : 100, name : 'Sewing Machine', Wat	:	350 },
+{id : 101, name : 'Singer Sewing Machine', Wat : 450 },
+{id : 102, name : 'Slow Cooker', Wat	:	480 },
+{id : 103, name : 'Smoke Detector', Wat 	:	12 },
+{id : 104, name : 'Steam Iron', Wat	:	2500 },
+{id : 105, name : 'Steriliser', Wat	:	850 },
+{id : 106, name : 'Straightening Iron', Wat	:	400 },
+{id : 107, name : 'Table Fan', Wat	:	50 },
+{id : 108, name : 'Table Top Fridge', Wat	:	95 },
+{id : 109, name : 'Tablet Charger', Wat	:	45 },
+{id : 110, name : 'Toaster', Wat 	:	2500 },
+{id : 111, name : 'Treadmill', Wat	: 1200 },
+{id : 112, name : 'Tube Light (1500mm)', Wat	:	40 },
+{id : 113, name : 'TV (19" colour)', Wat	:	200 },
+{id : 114, name : 'Vacuum Cleaner', Wat	:	1200 },
+{id : 115, name : 'Wall Fan', Wat	:	90 },
+{id : 116, name : 'Washing Machine', Wat	:	500 },
+{id : 117, name : 'Water Feature', Wat	:	35 },
+{id : 118, name : 'Water Filter and Cooler', Wat : 200 },
+{id : 119, name : 'WiFi Booster', Wat	:	19 },
+{id : 120, name : 'WiFi Router',	 Wat :	25 },
+{id : 121, name : 'Window Air Conditioner', Wat	:	1900 },
+{id : 122, name : 'Xbox One',  Wat	: 210 }
       ],
 
 selectedAppliance: null,
 allSelectedAppliance: null,
 
 LoadCalculationResource : [
-  {id : 1, inverter : 1000, battery : 1000},
-  {id : 2, inverter : 1200, battery : 1000},
-  {id : 3, inverter : 2000, battery : 2000},
-  {id : 4, inverter : 2400, battery : 2000},
-  {id : 5, inverter : 3000, battery : 4000},
-  {id : 6, inverter : 3500, battery : 4000},
-  {id : 7, inverter : 5000, battery : 8000},
-  {id : 8, inverter : 7500, battery : 8000},
-  {id : 9, inverter : 10000, battery : 8000},
-  {id : 10, inverter : 12000, battery : 12000},
-  {id : 11, inverter : 15000, battery : 16000},
-  {id : 12, inverter : 20000, battery : 16000},
+  {id : 1, inverter : 1000, loadWat: 600, battery : 1},
+  {id : 2, inverter : 1200, loadWat: 720, battery : 1},
+  {id : 3, inverter : 2000, loadWat: 1200, battery : 2},
+  {id : 4, inverter : 2400, loadWat: 1440, battery : 2},
+  {id : 5, inverter : 3000, loadWat: 1800, battery : 4},
+  {id : 6, inverter : 3500, loadWat: 2100, battery : 4},
+  {id : 7, inverter : 5000, loadWat: 3000, battery : 8},
+  {id : 8, inverter : 7500, loadWat: 4500, battery : 8},
+  {id : 9, inverter : 10000, loadWat: 6000, battery : 8},
+  {id : 10, inverter : 12000, loadWat: 7200, battery : 12},
+  {id : 11, inverter : 15000, loadWat: 9000, battery : 16},
+  {id : 12, inverter : 20000, loadWat: 12000, battery : 16},
 ],
 
 isActive: false,
+totalLoadWat: null,
+
+inventerType: null,
 
 form : {
   name : null,
@@ -325,6 +326,7 @@ form : {
 
   mounted() {
     this.getSelectedAppliances()
+    this.calculateInventer()
   },
 
 
@@ -334,17 +336,45 @@ form : {
     this.isActive = !this.isActive;
   },
 
+  incrementApplianceCounter(id, name, Wat, count) {
+    count++
+            let item = JSON.parse(window.localStorage.getItem("selectedAppliances")); //get them back
+            let index = item.findIndex(obj => obj.id == id)
+            item[index].id = id
+            item[index].Wat =Wat
+            item[index].name = name
+            item[index].count = count
+            window.localStorage.setItem("selectedAppliances", JSON.stringify(item)); //store cart item
+            this.getSelectedAppliances()
+    },
+
+    decrementApplianceCounter(id, name, Wat, count) {
+      if (count == 1)
+            count
+            else{
+              count--
+      }
+            let item = JSON.parse(window.localStorage.getItem("selectedAppliances")); //get them back
+            let index = item.findIndex(obj => obj.id == id)
+            item[index].id = id
+            item[index].name = name
+            item[index].Wat = Wat
+            item[index].count = count
+            window.localStorage.setItem("selectedAppliances", JSON.stringify(item)); //store cart item
+            this.getSelectedAppliances()
+    },
+
     addSelectedAppliances() {
     let item = JSON.parse(window.localStorage.getItem("selectedAppliances"));
     item = item == null ? [] : JSON.parse(window.localStorage.getItem("selectedAppliances"));
-    item.push({ name:this.selectedAppliance.name, Wat: parseFloat(this.selectedAppliance.Wat) })
+    item.push({id:this.selectedAppliance.id, name:this.selectedAppliance.name, Wat: parseFloat(this.selectedAppliance.Wat), count: 1 })
     window.localStorage.setItem("selectedAppliances", JSON.stringify(item)); //store cart item
     this.getSelectedAppliances()
     },
 
-    removeSelectedAppliances(name) {
+    removeSelectedAppliances(id) {
     let item = JSON.parse(window.localStorage.getItem("selectedAppliances")); //get them back
-    let index = item.findIndex(obj => obj.name == name)
+    let index = item.findIndex(obj => obj.id == id)
     item.splice(index, 1);
     window.localStorage.setItem("selectedAppliances", JSON.stringify(item)); //store cart item
     this.getSelectedAppliances()
@@ -352,7 +382,24 @@ form : {
 
     getSelectedAppliances(){
       this.allSelectedAppliance = JSON.parse(window.localStorage.getItem("selectedAppliances")); //get them back
+      let allWat = this.allSelectedAppliance == null ? null : this.allSelectedAppliance.map(obj => obj.count * obj.Wat);
+      this.totalLoadWat = allWat == null ? null : allWat.reduce((a, b) => a + b, 0)
     },
+
+    calculateInventer()
+    {
+      let bigCities = [];
+for (let i = 0; i < this.LoadCalculationResource.length; i++) {
+    if (this.LoadCalculationResource[i].loadWat >= this.totalLoadWat) {
+        bigCities.push(this.LoadCalculationResource[i]);
+    }
+}
+
+console.log(bigCities[0])
+
+this.inventerType = bigCities[0]
+
+    }
 
   }
 
@@ -360,6 +407,6 @@ form : {
 
 </script>
 
-
   </body>
+
 </html>
