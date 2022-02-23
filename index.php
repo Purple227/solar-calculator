@@ -22,6 +22,7 @@
   <div class="control has-icons-left has-text-success ">
   <div class="select">
     <select  v-model="selectedAppliance">
+      <option :value="null" disabled>Select Appliance</option>
       <option v-for="(appliance, index) in Appliances" :value="appliance"> {{ appliance.name }} </option>
     </select>
   </div>
@@ -79,8 +80,6 @@
 <div class="box" v-else>
   Please kindly selected the appliances You will be using from the dropdown. Thanks Bitch
 </div>
-
-
 </div>
 
 <!-- Button -->
@@ -98,15 +97,19 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title"> Hi just fill this form to get result. </p>
+      <p class="modal-card-title" v-if="resultStatus == false" > Hi just fill this form to get result. </p>
+      <p class="modal-card-title" v-else> Here is your result. </p>
       <button class="delete" aria-label="close" @click="modalFlip()"></button>
     </header>
     <section class="modal-card-body">
       <!-- Content ... -->
 
+<!-- Form container -->      
+<div v-if="resultStatus == false">
+
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" v-model="form.name" type="text" placeholder="Enter Name">
+    <input class="input" v-model="form.name" name="name" type="text" placeholder="Enter Name">
     <span class="icon is-small is-left">
       <i class="fas fa-envelope"></i>
     </span>
@@ -115,7 +118,7 @@
 
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" v-model="form.email" type="email" placeholder="Email">
+    <input class="input" v-model="form.email" type="email" name="email"  placeholder="Email">
     <span class="icon is-small is-left">
       <i class="fas fa-envelope"></i>
     </span>
@@ -124,16 +127,116 @@
 
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" type="tel" v-model="form.phone"  placeholder="Phone">
+    <input class="input" type="tel" v-model="form.phone" name="phone" placeholder="Phone">
     <span class="icon is-small is-left">
       <i class="fas fa-lock"></i>
     </span>
   </p>
 </div>
 
+</div>
+<!-- Form container close -->      
+
+<!-- Parent column open -->
+<div class="columns" v-if="resultStatus == true">
+
+<!-- First column open -->
+<div class="column">
+
+<div class="card">
+<header class="card-header p-3">
+<p class="is-bold title is-size-4">
+		Selected Appliance 
+</p>
+</header>
+
+<div class="content mt-2">
+<table class="table is-bordered">
+  <thead>
+    <tr>
+    <th> S.N </th>
+    <th> Name </th>
+    <th> Quantity </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr v-for="(appliance, index) in allSelectedAppliance" :key="index" >
+    <th>  {{ index+1 }} </th>
+    <th class="has-text-weight-light">  {{ appliance.name }} </th>
+    <th class="has-text-weight-light">  {{ appliance.count }} </th>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+<footer class="card-footer">
+    <p  class="card-footer-item is-bold title is-size-4"> Total Load = {{totalLoadWat}} W </p>
+  </footer>
+
+</div>
+
+
+</div>
+<!-- First column close -->
+
+
+<!-- Second column open -->
+<div class="column">
+
+
+<div class="card">
+
+<header class="card-header p-3">
+<p class="is-bold title">
+Recommendedation 
+</p>
+</header>
+
+<div class="notification is-light"> <!-- Notifacatin tag open -->
+
+						<div class="columns"> <!-- Columns wrapper tag open -->
+							<div class="column"> <!-- First column tag open -->
+								<div class="content">
+									  220amp   <strong>Battery  </strong> 
+								</div>
+							</div> <!-- First column tag close -->
+							<div class="column has-background-white"> <!-- Second column tag open -->
+								<div class="content has-text-weight-bold is-size-4 is-centered "> <!-- Content tag open -->
+                {{ inventerType.battery }}
+								</div> <!-- Content tag close -->
+							</div> <!-- Second column tag close -->
+						</div> <!-- Columns wrapper tag close -->
+					</div> <!-- Notifacatin tag close -->
+
+
+<div class="notification is-light"> <!-- Notifacatin tag open -->
+
+						<div class="columns"> <!-- Columns wrapper tag open -->
+							<div class="column"> <!-- First column tag open -->
+								<div class="content">
+                280W <strong>Solar Panel</strong> 
+								</div>
+							</div> <!-- First column tag close -->
+							<div class="column has-background-white "> <!-- Second column tag open -->
+								<div class="content has-text-weight-bold is-size-4 is-centered "> <!-- Content tag open -->
+                     {{ solarPanel }} 
+								</div> <!-- Content tag close -->
+							</div> <!-- Second column tag close -->
+						</div> <!-- Columns wrapper tag close -->
+					</div> <!-- Notifacatin tag close -->
+
+</div>
+<!-- Second column close -->
+
+
+</div>
+<!-- Parent column close -->
+
+
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success" :disabled="form.name == null || form.email == null || form.phone == null" > Get result </button>
+      <button class="button is-success" :disabled="form.name == null || form.email.length <= 5 || form.phone.length <= 8" @click="showResult"> Get result </button>
       <button class="button" @click="modalFlip()">Cancel</button>
     </footer>
   </div>
@@ -159,7 +262,8 @@
     data() {
       return {
         
-      Appliances: [
+      Appliances: 
+[
 {id : 1, name : 'light bulb (Incandescent)',  Wat :100},
 {id : 2, name : '22 Inch LED TV',  Wat : 50 },
 {id : 3, name : '25 colour TV', Wat :150 }, 
@@ -283,10 +387,7 @@
 {id : 120, name : 'WiFi Router',	 Wat :	25 },
 {id : 121, name : 'Window Air Conditioner', Wat	:	1900 },
 {id : 122, name : 'Xbox One',  Wat	: 210 }
-      ],
-
-selectedAppliance: null,
-allSelectedAppliance: null,
+],
 
 LoadCalculationResource : [
   {id : 1, inverter : 1000, loadWat: 600, battery : 1},
@@ -307,11 +408,16 @@ isActive: false,
 totalLoadWat: null,
 solarPanel: null,
 inventerType: null,
+resultStatus: false,
+selectedAppliance: null,
+allSelectedAppliance: null,
+dropDownActive: false,
+user: null,
 
 form : {
   name : null,
-  email: null,
-  phone: null
+  email: '',
+  phone: '',
 },
 
       }
@@ -326,13 +432,24 @@ form : {
 
   mounted() {
     this.getSelectedAppliances()
+    this.getPreviousFormRecord()
   },
 
 
     methods: {
 
+      getPreviousFormRecord()
+      {
+        let userInfo = JSON.parse(window.localStorage.getItem("user"));
+      this.user = userInfo == null ? null : JSON.parse(window.localStorage.getItem("user"));
+      },
+
   modalFlip() {
     this.isActive = !this.isActive;
+  },
+
+  dropDownActiveToggle() {
+    this.dropDownActive = !this.dropDownActive
   },
 
   incrementApplianceCounter(id, name, Wat, count) {
@@ -395,11 +512,16 @@ form : {
         bigCities.push(this.LoadCalculationResource[i]);
       }
      }
-
         this.inventerType = bigCities[0]
+        this.solarPanel = this.inventerType.battery + this.inventerType.battery 
+    },
 
-        this.solarpPnel = this.inventerType.battery + this.inventerType.battery 
+    showResult()
+    {
+      this.resultStatus = true
+      window.localStorage.setItem("user", JSON.stringify(this.form));
     }
+
 
   }
 
