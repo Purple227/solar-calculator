@@ -7,10 +7,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <script src="https://kit.fontawesome.com/9319d37366.js" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
   <section class="section" id="app">
-    <div class="container m-5 p-5">
+    <div class="container">
     <div class="box">
 
 <!-- Columns Container -->
@@ -21,8 +22,8 @@
 
   <div class="control has-icons-left has-text-success ">
   <div class="select">
-    <select  v-model="selectedAppliance">
-      <option :value="null" disabled>Select Appliance</option>
+    <select v-model="selectedAppliance">
+      <option :value="null" disabled="">Select Appliance</option>
       <option v-for="(appliance, index) in Appliances" :value="appliance"> {{ appliance.name }} </option>
     </select>
   </div>
@@ -41,7 +42,7 @@
 
 
 <div class="notification is-light m-2 p-2" v-for="(selectedLoad, index) in allSelectedAppliance" :key="index" v-if="allSelectedAppliance != 0"> <!-- Notifacatin tag open -->
-						<button class="delete" @click="removeSelectedAppliances(selectedLoad.id)"> </button>
+						<button class="delete ml-4" @click="removeSelectedAppliances(selectedLoad.id)"> </button>
 
 						<div class="columns"> <!-- Columns wrapper tag open -->
 
@@ -56,15 +57,15 @@
 
 								<div class="content"> <!-- Content tag open -->
 
-									<div class="buttons has-addons " >
+									<div class="buttons has-addons ">
 
-										<span class="button is-small"  @click="decrementApplianceCounter(selectedLoad.id, selectedLoad.name, selectedLoad.Wat, selectedLoad.count)"> <i class="fas fa-minus" > </i>  </span>
+										<span class="button is-small" @click="decrementApplianceCounter(selectedLoad.id, selectedLoad.name, selectedLoad.Wat, selectedLoad.count)"> <i class="fas fa-minus"> </i>  </span>
 
 
 										<span class="button is-small orange is-bold is-pulled-right"> {{ selectedLoad.count  }} </span>
 
 
-										<span class="button is-small " @click="incrementApplianceCounter(selectedLoad.id, selectedLoad.name, selectedLoad.Wat, selectedLoad.count)"> <i class="fas fa-plus" > </i> </span>
+										<span class="button is-small " @click="incrementApplianceCounter(selectedLoad.id, selectedLoad.name, selectedLoad.Wat, selectedLoad.count)"> <i class="fas fa-plus"> </i> </span>
 
 									</div>
 
@@ -77,7 +78,7 @@
 
 					</div> <!-- Notifacatin tag close -->
 
-<div class="box" v-else>
+<div class="box" v-else="">
   Please kindly selected the appliances You will be using from the dropdown. Thanks Bitch
 </div>
 </div>
@@ -97,8 +98,8 @@
   <div class="modal-background"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <p class="modal-card-title" v-if="resultStatus == false" > Hi just fill this form to get result. </p>
-      <p class="modal-card-title" v-else> Here is your result. </p>
+      <p class="modal-card-title" v-if="resultStatus == false"> Hi just fill this form to get result. </p>
+      <p class="modal-card-title" v-else=""> Here is your result. </p>
       <button class="delete" aria-label="close" @click="modalFlip()"></button>
     </header>
     <section class="modal-card-body">
@@ -111,14 +112,14 @@
   <p class="control has-icons-left">
     <input class="input" v-model="form.name" name="name" type="text" placeholder="Enter Name">
     <span class="icon is-small is-left">
-      <i class="fas fa-envelope"></i>
+      <i class="fa-solid fa-user"></i>
     </span>
   </p>
 </div>
 
 <div class="field">
   <p class="control has-icons-left">
-    <input class="input" v-model="form.email" type="email" name="email"  placeholder="Email">
+    <input class="input" v-model="form.email" type="email" name="email" placeholder="Email">
     <span class="icon is-small is-left">
       <i class="fas fa-envelope"></i>
     </span>
@@ -129,7 +130,7 @@
   <p class="control has-icons-left">
     <input class="input" type="tel" v-model="form.phone" name="phone" placeholder="Phone">
     <span class="icon is-small is-left">
-      <i class="fas fa-lock"></i>
+      <i class="fa-solid fa-phone"></i>
     </span>
   </p>
 </div>
@@ -154,15 +155,13 @@
 <table class="table is-bordered">
   <thead>
     <tr>
-    <th> S.N </th>
     <th> Name </th>
     <th> Quantity </th>
     </tr>
   </thead>
 
   <tbody>
-    <tr v-for="(appliance, index) in allSelectedAppliance" :key="index" >
-    <th>  {{ index+1 }} </th>
+    <tr v-for="(appliance, index) in allSelectedAppliance" :key="index">
     <th class="has-text-weight-light">  {{ appliance.name }} </th>
     <th class="has-text-weight-light">  {{ appliance.count }} </th>
     </tr>
@@ -171,7 +170,7 @@
 </div>
 
 <footer class="card-footer">
-    <p  class="card-footer-item is-bold title is-size-4"> Total Load = {{totalLoadWat}} W </p>
+    <p class="card-footer-item is-bold title is-size-4"> Total Load = {{totalLoadWat}} W </p>
   </footer>
 
 </div>
@@ -184,47 +183,31 @@
 <!-- Second column open -->
 <div class="column">
 
-
 <div class="card">
 
-<header class="card-header p-3">
-<p class="is-bold title">
-Recommendedation 
+<header class="card-header">
+<p class="is-bold title is-size-4 p-2 m-2">
+Recommendation 
 </p>
 </header>
 
-<div class="notification is-light"> <!-- Notifacatin tag open -->
+<div class="content is-centered is-size-5 p-5 mb-0" v-if="inventerType != false">
+Inverter = <strong> {{ inventerType.type }}KVA </strong>
+<br>
+Battery (220amp) = <strong> {{ inventerType.battery }} </strong>
+<br>
+Solar Panel (280w) = <strong> {{ solarPanel }} </strong>
+</div>
 
-						<div class="columns"> <!-- Columns wrapper tag open -->
-							<div class="column"> <!-- First column tag open -->
-								<div class="content">
-									  220amp   <strong>Battery  </strong> 
-								</div>
-							</div> <!-- First column tag close -->
-							<div class="column has-background-white"> <!-- Second column tag open -->
-								<div class="content has-text-weight-bold is-size-4 is-centered "> <!-- Content tag open -->
-                {{ inventerType.battery }}
-								</div> <!-- Content tag close -->
-							</div> <!-- Second column tag close -->
-						</div> <!-- Columns wrapper tag close -->
-					</div> <!-- Notifacatin tag close -->
+<div class="content mt-0 p-3" v-else="">
+<strong> Note: </strong> Your total load from selected appliances requires a custom inspection and quote. Kindly give us a call on 07041384671 or 08167984003 for a proper recommendation.
+</div>
 
+<div class="content mt-0 p-3" v-if="inventerType != false">
+<strong> Note: </strong> This is only a recommendation based on the selected appliances. For accurate estimate call:07041384671 or 08167984003 if you prefer mail you can mail us support@247energy.com
+</div>
 
-<div class="notification is-light"> <!-- Notifacatin tag open -->
-
-						<div class="columns"> <!-- Columns wrapper tag open -->
-							<div class="column"> <!-- First column tag open -->
-								<div class="content">
-                280W <strong>Solar Panel</strong> 
-								</div>
-							</div> <!-- First column tag close -->
-							<div class="column has-background-white "> <!-- Second column tag open -->
-								<div class="content has-text-weight-bold is-size-4 is-centered "> <!-- Content tag open -->
-                     {{ solarPanel }} 
-								</div> <!-- Content tag close -->
-							</div> <!-- Second column tag close -->
-						</div> <!-- Columns wrapper tag close -->
-					</div> <!-- Notifacatin tag close -->
+</div>
 
 </div>
 <!-- Second column close -->
@@ -236,12 +219,11 @@ Recommendedation
 
     </section>
     <footer class="modal-card-foot">
-      <button class="button is-success" :disabled="form.name == null || form.email.length <= 5 || form.phone.length <= 8" @click="showResult"> Get result </button>
+      <button class="button is-success" :disabled="form.name == null || form.email.length <= 5 || form.phone.length <= 8 || resultStatus == true" name="submit" type="submit" @click="showResult"> Get result </button>
       <button class="button" @click="modalFlip()">Cancel</button>
     </footer>
   </div>
 </div>
-
 
 </div>
   <!-- Second column tag closes -->
@@ -390,18 +372,18 @@ Recommendedation
 ],
 
 LoadCalculationResource : [
-  {id : 1, inverter : 1000, loadWat: 600, battery : 1},
-  {id : 2, inverter : 1200, loadWat: 720, battery : 1},
-  {id : 3, inverter : 2000, loadWat: 1200, battery : 2},
-  {id : 4, inverter : 2400, loadWat: 1440, battery : 2},
-  {id : 5, inverter : 3000, loadWat: 1800, battery : 4},
-  {id : 6, inverter : 3500, loadWat: 2100, battery : 4},
-  {id : 7, inverter : 5000, loadWat: 3000, battery : 8},
-  {id : 8, inverter : 7500, loadWat: 4500, battery : 8},
-  {id : 9, inverter : 10000, loadWat: 6000, battery : 8},
-  {id : 10, inverter : 12000, loadWat: 7200, battery : 12},
-  {id : 11, inverter : 15000, loadWat: 9000, battery : 16},
-  {id : 12, inverter : 20000, loadWat: 12000, battery : 16},
+  {id : 1, inverter : 1000, loadWat: 600, battery : 1, type: 1.0},
+  {id : 2, inverter : 1200, loadWat: 720, battery : 1, type: 1.2},
+  {id : 3, inverter : 2000, loadWat: 1200, battery : 2, type: 2.0},
+  {id : 4, inverter : 2400, loadWat: 1440, battery : 2, type: 2.4},
+  {id : 5, inverter : 3000, loadWat: 2100, battery : 4, type: 3.0},
+  {id : 6, inverter : 3500, loadWat: 2400, battery : 4, type: 3.5},
+  {id : 7, inverter : 5000, loadWat: 4000, battery : 8, type: 5.0},
+  {id : 8, inverter : 7500, loadWat: 6000, battery : 8, type: 7.5},
+  {id : 9, inverter : 10000, loadWat: 8000, battery : 8, type: 10 },
+  {id : 10, inverter : 12000, loadWat: 9600, battery : 12, type: 12},
+  {id : 11, inverter : 15000, loadWat: 12000, battery : 16, type: 15},
+  {id : 12, inverter : 20000, loadWat: 16000, battery : 16, type: 20},
 ],
 
 isActive: false,
@@ -513,6 +495,9 @@ form : {
       }
      }
         this.inventerType = bigCities[0]
+        if(this.inventerType == undefined){
+        this.inventerType = false
+        }
         this.solarPanel = this.inventerType.battery + this.inventerType.battery 
     },
 
@@ -520,8 +505,23 @@ form : {
     {
       this.resultStatus = true
       window.localStorage.setItem("user", JSON.stringify(this.form));
-    }
 
+      axios.post('https://lovepreneurship.wocasolutions.com/api/energy-mail', {
+      name: this.form.name,
+      phone : this.form.phone,
+      email: this.form.email,
+inventer_requested: this.inventerType.type + 'KVA',
+solar_panel_requested: this.solarPanel + '280W',
+total_load: this.totalLoadWat + 'W',
+battery_suggested: this.inventerType.battery + '220amp'
+    })
+    .then(function (response) {
+      console.log(response)
+    })
+    .catch(function (error) {
+      console.log('I just want to cry')
+    });
+    }
 
   }
 
